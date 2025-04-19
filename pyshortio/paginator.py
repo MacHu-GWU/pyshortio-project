@@ -59,7 +59,7 @@ def _paginate(
         2. The max_results limit is reached
 
         Each yield produces the exact same return value structure as the original method
-    
+
     :param method: The original API method to call (e.g., list_link)
     :param list_key: The key in the response JSON that contains the list of items
     :param get_next_token: Function that extracts the next page token from a response
