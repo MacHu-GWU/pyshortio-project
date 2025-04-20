@@ -283,6 +283,31 @@ class Link(BaseModel):
         }
 
 
+@dataclasses.dataclass
+class Folder(BaseModel):
+    _data: dict[str, T.Any] = dataclasses.field(default=REQ)
+
+    @property
+    def domain_id(self) -> T.Optional[int]:
+        return self._data.get("DomainId")
+
+    @property
+    def id(self) -> str:
+        return self._data.get("id")
+
+    @property
+    def name(self) -> str:
+        return self._data.get("name")
+
+    @property
+    def core_data(self) -> T_KWARGS:
+        return {
+            "domain_id": self.domain_id,
+            "id": self.id,
+            "name": self.name,
+        }
+
+
 class LinkQueriesMixin:
     """
     Mixin class providing Link-related API methods for the Client.
@@ -297,6 +322,7 @@ class LinkQueriesMixin:
     Methods prefixed with `pagi_` implement the Pagination Abstraction Pattern,
     automatically handling pagination for list operations.
     """
+
     def list_link(
         self: "Client",
         domain_id: int,
@@ -372,6 +398,7 @@ class LinkQueriesMixin:
 
             This method automatically handles fetching subsequent pages until
         """
+
         def get_next_token(res):
             return res.get("nextPageToken")
 
@@ -414,5 +441,117 @@ class LinkQueriesMixin:
         response = self.http_get(url=url)
         if raise_for_status:
             response.raise_for_status()
-        print(response.text)
-        return response
+        return response, None
+
+    def get_link_info_by_link_id(
+        self: "Client",
+        link_id: str,
+        raise_for_status: bool = True,
+    ) -> tuple[Response, Link]:
+        """
+        Get link information by link ID.
+
+        Ref:
+
+        - https://developers.short.io/reference/get_links-linkid
+        """
+        url = f"{self.endpoint}/links/{link_id}"
+        response = self.http_get(url=url)
+        if raise_for_status:
+            response.raise_for_status()
+        if response.status_code == 404:
+            link = None
+        else:
+            link = Link(_data=response.json())
+        return response, link
+
+    def get_link_info_by_path(
+        self: "Client",
+        hostname: str,
+        path: str,
+        raise_for_status: bool = True,
+    ) -> tuple[Response, Link]:
+        """
+        Get link information by link ID.
+
+        Ref:
+
+        - https://developers.short.io/reference/get_links-expand
+        """
+        url = f"{self.endpoint}/links/expand"
+        params = {
+            "domain": hostname,
+            "path": path,
+        }
+        response = self.http_get(url=url, params=params)
+        if raise_for_status:
+            response.raise_for_status()
+        if response.status_code == 404:
+            link = None
+        else:
+            link = Link(_data=response.json())
+        return response, link
+
+    def list_links_by_original_url(
+        self: "Client",
+        hostname: str,
+        original_url: str,
+        raise_for_status: bool = True,
+    ) -> tuple[Response, list[Link]]:
+        """
+        Returns all links with the same original URL.
+
+        Ref:
+
+        - https://developers.short.io/reference/get_links-multiple-by-url
+        """
+        url = f"{self.endpoint}/links/multiple-by-url"
+        params = {
+            "domain": hostname,
+            "originalURL": original_url,
+        }
+        response = self.http_get(url=url, params=params)
+        if raise_for_status:
+            response.raise_for_status()
+        link_list = [Link(_data=dct) for dct in response.json().get("links", [])]
+        return response, link_list
+
+    def list_folders(
+        self: "Client",
+        domain_id: int,
+        raise_for_status: bool = True,
+    ) -> tuple[Response, list[Folder]]:
+        """
+        Ref:
+
+        - https://developers.short.io/reference/get_links-folders-domainid
+        """
+        url = f"{self.endpoint}/links/folders/{domain_id}"
+        response = self.http_get(url=url)
+        if raise_for_status:
+            response.raise_for_status()
+        folder_list = [
+            Folder(_data=dct) for dct in response.json().get("linkFolders", [])
+        ]
+        return response, folder_list
+
+    def get_folder(
+        self: "Client",
+        domain_id: int,
+        folder_id: str,
+        raise_for_status: bool = True,
+    ) -> tuple[Response, T.Optional[Folder]]:
+        """
+        Ref:
+
+        - https://developers.short.io/reference/get_links-folders-domainid-folderid
+        """
+        url = f"{self.endpoint}/links/folders/{domain_id}/{folder_id}"
+        response = self.http_get(url=url)
+        if raise_for_status:
+            response.raise_for_status()
+        if response.status_code == 404:
+            folder = None
+        else:
+            folder = Folder(_data=response.json())
+        return response, folder
