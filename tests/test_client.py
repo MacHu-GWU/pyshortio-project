@@ -3,9 +3,7 @@
 import os
 import pytest
 from pyshortio.client import normalize_endpoint
-from pyshortio.tests.client import client
-
-IS_CI = "CI" in os.environ
+from pyshortio.tests.client import IS_CI, client
 
 
 def test_normalize_endpoint():

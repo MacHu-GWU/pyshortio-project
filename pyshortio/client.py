@@ -138,6 +138,9 @@ class Client(
         data: T.Optional[dict[str, T.Any]] = None,
         debug: bool = DEFAULT_DEBUG,
     ):
+        """
+        Perform an HTTP POST request to the Short.io API.
+        """
         if debug:
             print(f"===== Start of POST request.url = {url} =====")
 
@@ -171,6 +174,9 @@ class Client(
         data: T.Optional[dict[str, T.Any]] = None,
         debug: bool = DEFAULT_DEBUG,
     ):
+        """
+        Perform an HTTP DELETE request to the Short.io API.
+        """
         if debug:
             print(f"===== Start of DELETE request.url = {url} =====")
 
