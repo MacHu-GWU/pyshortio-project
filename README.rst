@@ -3,7 +3,7 @@
     :target: https://pyshortio.readthedocs.io/en/latest/
     :alt: Documentation Status
 
-.. image:: https://github.com/MacHu-GWU/pyshortio-project/actions/workflows/main.yml/badge.svg
+.. .. image:: https://github.com/MacHu-GWU/pyshortio-project/actions/workflows/main.yml/badge.svg
     :target: https://github.com/MacHu-GWU/pyshortio-project/actions?query=workflow:CI
 
 .. image:: https://codecov.io/gh/MacHu-GWU/pyshortio-project/branch/main/graph/badge.svg

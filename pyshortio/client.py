@@ -108,13 +108,13 @@ class Client(
         including adding appropriate headers, formatting parameters, and
         logging request/response details for debugging.
         """
-        if debug:
+        if debug:  # pragma: no cover
             print(f"===== Start of GET request.url = {url} =====")
 
         final_headers = self.headers
-        if headers is not None:# pragma: no cover
+        if headers is not None:  # pragma: no cover
             final_headers.update(headers)
-        if debug:
+        if debug:  # pragma: no cover
             print(f"request.headers = {final_headers}")
             print(f"request.params = {params}")
 
@@ -123,7 +123,7 @@ class Client(
             headers=final_headers,
             params=params,
         )
-        if debug:
+        if debug:  # pragma: no cover
             print(f"response.status = {res.status_code}")
             print("response.data =")
             print(json.dumps(res.json(), indent=4, ensure_ascii=False))
@@ -141,13 +141,13 @@ class Client(
         """
         Perform an HTTP POST request to the Short.io API.
         """
-        if debug:
+        if debug:  # pragma: no cover
             print(f"===== Start of POST request.url = {url} =====")
 
         final_headers = self.headers
-        if headers is not None: # pragma: no cover
+        if headers is not None:  # pragma: no cover
             final_headers.update(headers)
-        if debug:
+        if debug:  # pragma: no cover
             print(f"request.headers = {final_headers}")
             print(f"request.params = {params}")
             print(f"request.data = {data}")
@@ -158,7 +158,7 @@ class Client(
             params=params,
             json=data,
         )
-        if debug:
+        if debug:  # pragma: no cover
             print(f"response.status = {res.status_code}")
             print(f"response.headers = {res.headers}")
             print("response.data =")
@@ -177,13 +177,13 @@ class Client(
         """
         Perform an HTTP DELETE request to the Short.io API.
         """
-        if debug:
+        if debug:  # pragma: no cover
             print(f"===== Start of DELETE request.url = {url} =====")
 
         final_headers = self.delete_headers
-        if headers is not None: # pragma: no cover
+        if headers is not None:  # pragma: no cover
             final_headers.update(headers)
-        if debug:
+        if debug:  # pragma: no cover
             print(f"request.headers = {final_headers}")
             print(f"request.params = {params}")
             print(f"request.data = {data}")
@@ -194,7 +194,7 @@ class Client(
             params=params,
             json=data,
         )
-        if debug:
+        if debug:  # pragma: no cover
             print(f"response.status = {res.status_code}")
             print(f"response.headers = {res.headers}")
             print("response.data =")
