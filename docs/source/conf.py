@@ -246,3 +246,5 @@ docfly.ApiDocGenerator(
         f"{package_name}.paths",
     ],
 ).fly()
+
+nbsphinx_allow_errors = True
