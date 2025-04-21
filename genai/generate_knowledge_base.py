@@ -29,6 +29,7 @@ gh_pipeline = GitHubPipeline(
         f"{PACKAGE_NAME}/**/*.py",
         "tests/**/*.py",
         "docs/source/**/index.rst",
+        "docs/source/**/index.md",
         "docs/source/**/*.py",
         # "bin/**/*.py",
         ".github/workflows/*.yml",

@@ -2,6 +2,7 @@
 pyshortio.egg-info/
 docs/source/**/index.md
 tmp/
+index.md
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

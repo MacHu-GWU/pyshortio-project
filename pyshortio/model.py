@@ -3,23 +3,31 @@
 """
 Base model implementation for Short.io API objects.
 
-This module provides the foundational BaseModel class that all Short.io API
-object models (such as Domain, Link) inherit from. It handles common functionality
-including:
+This module provides the foundational data models for the Short.io API client library,
+implementing common patterns for representing and interacting with Short.io resources.
+The models follow three key design patterns:
 
-1. Parameter validation for required fields
-2. Distinguishing between required and optional parameters
-3. Post-initialization validation
-4. Common interface methods that all models must implement
+1. **Raw Data Storage Pattern**:
 
-The BaseModel class works in conjunction with the sentinel values (REQ, NA)
-from the arg module to manage required vs optional fields in a dataclass-friendly way.
-This approach allows Short.io API objects to:
+All models store the original API response data in a `_data` attribute, treating the
+API response schema as potentially unstable. Properties provide a stable interface
+for accessing the underlying data, making the code more resilient to API changes.
 
-- Validate their structure against API requirements
-- Convert between API responses and Python objects
-- Maintain consistent interfaces across different object types
-- Handle missing or optional fields appropriately
+2. **Property-Based Access Pattern**:
+
+All attributes are exposed through properties rather than direct instance attributes.
+This approach allows for lazy loading, data validation, and type conversion while
+maintaining a clean public interface.
+
+3. **Core Data Extraction Pattern**:
+
+Each model implements a `core_data` property that returns a standardized, minimal
+representation of the object. This provides a consistent way to access essential
+information across different model types.
+
+These models are designed to be instantiated by the API client methods, not directly
+by users of the library. They provide a Pythonic interface to the JSON data returned
+by the Short.io API.
 """
 
 import typing as T
@@ -37,16 +45,22 @@ class BaseModel:
     """
     Base class for all Short.io API object models.
 
-    This class provides common functionality for model validation, parameter handling,
-    and interface consistency. All Short.io API object models (Domain, Link, etc.)
-    should inherit from this class.
+    This abstract base class provides common functionality for data validation,
+    parameter handling, and consistent interfaces across all Short.io resource models.
+    It implements parameter validation for required fields and provides methods to
+    distinguish between required and optional parameters.
 
-    The BaseModel handles validation of required fields and provides methods to
-    distinguish between required and optional parameters. It also defines the
-    core_data property interface that all models must implement.
+    All Short.io API resource models (Domain, Link, Folder, etc.) inherit from this
+    class, ensuring consistent behavior and interfaces throughout the library.
+
+    The class works with the sentinel values (REQ, NA) defined in the arg module
+    to manage required vs. optional fields in a dataclass-friendly way.
     """
 
     def _validate(self):
+        """
+        Validate that all required fields have values.
+        """
         for field in dataclasses.fields(self.__class__):
             if field.init:
                 k = field.name
@@ -57,7 +71,9 @@ class BaseModel:
         self._validate()
 
     @classmethod
-    def _split_req_opt(cls, kwargs: T_KWARGS) -> T.Tuple[T_KWARGS, T_KWARGS]: # pragma: no cover
+    def _split_req_opt(
+        cls, kwargs: T_KWARGS
+    ) -> T.Tuple[T_KWARGS, T_KWARGS]:  # pragma: no cover
         """
         Splits parameters into required and optional dictionaries.
 
@@ -95,7 +111,14 @@ class BaseModel:
 @dataclasses.dataclass
 class Domain(BaseModel):
     """
-    Domain model.
+    Domain model representing a Short.io domain configuration.
+
+    This class provides a Pythonic interface to Short.io domain data while maintaining
+    access to the raw API response through the `_data` attribute. All domain properties
+    are accessed through getter methods that retrieve values from the underlying data.
+
+    Following the Raw Data Storage Pattern, the Domain model doesn't define its own
+    attributes beyond ``_data``, instead exposing all API data through property methods.
 
     Ref:
 
@@ -274,12 +297,21 @@ class Domain(BaseModel):
 @dataclasses.dataclass
 class Link(BaseModel):
     """
-    Link model representing a Short.io shortened link.
+    Link model representing a Short.io shortened URL.
 
-    This class provides a Pythonic interface to Short.io link data while maintaining
-    access to the raw API response. All link properties are accessed through
-    getter methods that retrieve values from the underlying `_data` dictionary,
-    providing resilience against API schema changes.
+    This class provides a comprehensive Pythonic interface to Short.io link data
+    while preserving access to the raw API response. The Link model implements the
+    Raw Data Storage Pattern, storing the original API response in the `_data` attribute
+    and accessing it through property methods.
+
+    All link properties are accessed through getter methods that retrieve values from
+    the underlying data dictionary, providing resilience against API schema changes.
+    This approach treats the Short.io API response as having an unstable schema,
+    storing raw values as-is and using lazy-loaded properties to access the data
+    instead of defining them as instance attributes.
+
+    Property methods handle type conversion (e.g., converting string dates to datetime
+    objects) and gracefully handle missing values by returning None for optional fields.
 
     .. note::
 
@@ -496,6 +528,15 @@ class Link(BaseModel):
 
 @dataclasses.dataclass
 class Folder(BaseModel):
+    """
+    Folder model representing a Short.io link organization folder.
+
+    This class provides access to folder data from the Short.io API.
+    Following the same pattern as other models, it stores the raw API
+    response in the `_data` attribute and provides property methods
+    for accessing specific attributes.
+    """
+
     _data: dict[str, T.Any] = dataclasses.field(default=REQ)
 
     @property

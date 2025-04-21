@@ -1,5 +1,13 @@
 # -*- coding: utf-8 -*-
 
+"""
+Short.io Domain API implementation.
+
+This module provides classes and methods for interacting with the Short.io Domain-related
+API endpoints. It includes the Domain model class and API methods for retrieving domain
+information.
+"""
+
 import typing as T
 
 from requests import Response
@@ -13,6 +21,10 @@ if T.TYPE_CHECKING:  # pragma: no cover
 
 
 class DomainMixin:
+    """
+    Mixin class providing Domain-related API methods for the Client.
+    """
+
     def list_domains(
         self: "Client",
         limit: T.Optional[int] = NA,
@@ -23,6 +35,8 @@ class DomainMixin:
         raise_for_status: bool = DEFAULT_RAISE_FOR_STATUS,
     ) -> tuple[Response, list[Domain]]:
         """
+        Retrieve a list of all domains with optional filtering.
+
         Ref:
 
         - https://developers.short.io/reference/get_api-domains
@@ -51,6 +65,8 @@ class DomainMixin:
         raise_for_status: bool = DEFAULT_RAISE_FOR_STATUS,
     ) -> tuple[Response, T.Optional[Domain]]:
         """
+        Retrieve a specific domain by its ID.
+
         Ref:
 
         - https://developers.short.io/reference/get_domains-domainid
@@ -72,6 +88,12 @@ class DomainMixin:
         hostname: str,
         raise_for_status: bool = DEFAULT_RAISE_FOR_STATUS,
     ) -> T.Tuple[Response, T.Optional[Domain]]:
+        """
+        Find a domain by its hostname.
+
+        This method lists all domains and finds the one matching the specified hostname.
+        This is a convenience method that combines :meth:`list_domains` and filtering.
+        """
         response, domain_list = self.list_domains(raise_for_status=raise_for_status)
         for domain in domain_list:
             if domain.hostname == hostname:

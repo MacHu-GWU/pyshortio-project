@@ -72,18 +72,18 @@ class TestClient:
         assert self.link_integrations.original_url == "https://short.io/integrations/"
 
     def _test_03_list_and_get_links(self):
-        _, link_list = client.list_link(
+        _, link_list = client.list_links(
             domain_id=self.domain_id,
             limit=2,
         )
         assert len(link_list) == 2
 
-        _, link_list = client.list_link(
+        _, link_list = client.list_links(
             domain_id=self.domain_id,
         )
         assert len(link_list) == 3
 
-        _, link_list = client.list_link(
+        _, link_list = client.list_links(
             domain_id=self.domain_id,
             limit=100,
         )
@@ -191,7 +191,7 @@ class TestClient:
         )
         assert success is False
 
-        _, link_list = client.list_link(
+        _, link_list = client.list_links(
             domain_id=self.domain_id,
             limit=100,
         )

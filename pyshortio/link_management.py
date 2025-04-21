@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 
 """
+Short.io Link Management API implementation.
+
+This module provides classes and methods for creating, updating, and deleting links
+in the Short.io service. It complements the :mod:`pyshortio.link_queries` module
+by focusing on modification operations rather than retrieval operations.
 """
 
 try:
@@ -23,6 +28,14 @@ if T.TYPE_CHECKING:  # pragma: no cover
 
 
 class T_CREATE_BATCH_LINK(T.TypedDict):
+    """
+    Type definition for batch link creation parameters.
+
+    This TypedDict defines the expected structure for the links parameter in
+    the batch_create_links method. It includes both required and optional fields
+    that can be specified for each link in the batch.
+    """
+
     original_url: T.Required[str]
     cloaking: T.NotRequired[bool]
     password: T.NotRequired[str]
@@ -56,11 +69,25 @@ class T_CREATE_BATCH_LINK(T.TypedDict):
 
 
 class T_CREATE_LINK(T_CREATE_BATCH_LINK):
+    """
+    Type definition for link creation parameters.
+
+    Extends ``T_CREATE_BATCH_LINK`` by adding the required hostname parameter.
+    This TypedDict is used to define the expected structure for create_link method
+    parameters.
+    """
+
     hostname: T.Required[str]
 
 
 class LinkManagementMixin:
-    """ """
+    """
+    Mixin class providing Link management API methods for the Client.
+
+    This class implements methods for creating, updating, and deleting links in the
+    Short.io service. It focuses exclusively on modification operations, complementing
+    the query operations in LinkQueriesMixin.
+    """
 
     def create_link(
         self: "Client",
@@ -98,6 +125,30 @@ class LinkManagementMixin:
         raise_for_status: bool = DEFAULT_RAISE_FOR_STATUS,
     ) -> tuple[Response, T.Optional[Link]]:
         """
+        Create a new shortened link.
+
+        This method creates a new shortened link on the specified domain pointing
+        to the provided original URL. It supports a wide range of optional parameters
+        for customizing the link's behavior and appearance.
+
+        Example:
+
+        >>> # Create a simple link with just original URL
+        >>> response, link = client.create_link(
+        ...     hostname="example.short.gy",
+        ...     original_url="https://example.com/page"
+        ... )
+        >>> print(link.original_url)  # Output: https://example.com/page
+        >>>
+        >>> # Create a link with custom title and other options
+        >>> response, link = client.create_link(
+        ...     hostname="example.short.gy",
+        ...     original_url="https://example.com/features",
+        ...     title="Example Features Page",
+        ...     utm_source="newsletter",
+        ...     utm_medium="email"
+        ... )
+        >>> print(link.title)  # Output: Example Features Page
 
         Ref:
 
@@ -146,7 +197,7 @@ class LinkManagementMixin:
             response.raise_for_status()
         if response.status_code == 200:
             link = Link(_data=response.json())
-        else: # pragma: no cover
+        else:  # pragma: no cover
             raise NotImplementedError("Unexpected response code")
         return response, link
 
@@ -159,6 +210,37 @@ class LinkManagementMixin:
         raise_for_status: bool = DEFAULT_RAISE_FOR_STATUS,
     ) -> tuple[Response, T.Optional[list[Link]]]:
         """
+        This method allows creating multiple links at once, which is more efficient
+        than making separate requests for each link. Each link in the batch can have
+        its own set of parameters.
+
+        Example:
+
+        >>> # Create multiple links in a batch
+        >>> response, links = client.batch_create_links(
+        ...     hostname="example.short.gy",
+        ...     links=[
+        ...         {
+        ...             "title": "Example Features",
+        ...             "original_url": "https://example.com/features",
+        ...         },
+        ...         {
+        ...             "title": "Example Integrations",
+        ...             "original_url": "https://example.com/integrations",
+        ...         }
+        ...     ]
+        ... )
+        >>>
+        >>> # Access the created links
+        >>> features_link = links[0]
+        >>> integrations_link = links[1]
+        >>>
+        >>> print(features_link.title)  # Output: Example Features
+        >>> print(features_link.original_url)  # Output: https://example.com/features
+        >>>
+        >>> print(integrations_link.title)  # Output: Example Integrations
+        >>> print(integrations_link.original_url)  # Output: https://example.com/integrations
+
         Ref:
 
         - https://developers.short.io/reference/post_links-bulk
@@ -254,6 +336,33 @@ class LinkManagementMixin:
         raise_for_status: bool = DEFAULT_RAISE_FOR_STATUS,
     ) -> tuple[Response, T.Optional[Link]]:
         """
+        This method updates the properties of an existing link identified by its ID.
+        Any parameter not explicitly provided (set to NA) will be left unchanged.
+
+        Example:
+
+        >>> # Update title and original URL of an existing link
+        >>> response, link = client.update_link(
+        ...     link_id="lnk_abc123def456",
+        ...     title="Updated Title",
+        ...     original_url="https://example.com/updated"
+        ... )
+        >>> print(link.title)  # Output: Updated Title
+        >>> print(link.original_url)  # Output: https://example.com/updated
+        >>>
+        >>> # Verify the update by retrieving the link
+        >>> response, link = client.get_link_info_by_link_id(
+        ...     link_id="lnk_abc123def456"
+        ... )
+        >>> print(link.title)  # Output: Updated Title
+        >>> print(link.original_url)  # Output: https://example.com/updated
+        >>>
+        >>> # Try to update a non-existent link
+        >>> response, link = client.update_link(
+        ...     link_id="non_existent",
+        ...     raise_for_status=False
+        ... )
+        >>> print(link)  # Output: None
 
         Ref:
 
@@ -318,6 +427,29 @@ class LinkManagementMixin:
         raise_for_status: bool = DEFAULT_RAISE_FOR_STATUS,
     ) -> tuple[Response, T.Optional[bool]]:
         """
+        This method permanently deletes a link identified by its ID.
+
+        Example:
+
+        >>> # Delete an existing link
+        >>> response, success = client.delete_link(
+        ...     link_id="lnk_abc123def456"
+        ... )
+        >>> print(success)  # Output: True
+        >>>
+        >>> # Try to delete a non-existent link
+        >>> response, success = client.delete_link(
+        ...     link_id="non_existent",
+        ...     raise_for_status=False
+        ... )
+        >>> print(success)  # Output: False
+        >>>
+        >>> # Verify the link was deleted
+        >>> response, link_list = client.list_links(
+        ...     domain_id=45678
+        ... )
+        >>> # Count of links should be reduced
+
         Ref:
 
         - https://developers.short.io/reference/delete_links-link-id
@@ -342,6 +474,29 @@ class LinkManagementMixin:
         raise_for_status: bool = DEFAULT_RAISE_FOR_STATUS,
     ) -> tuple[Response, T.Optional[bool]]:
         """
+        This method allows deleting multiple links at once, which is more efficient
+        than making separate requests for each link.
+
+        Example:
+
+        >>> # Delete multiple links in a batch
+        >>> link_ids = ["lnk_abc123def456", "lnk_ghi789jkl012"]
+        >>> response, success = client.batch_delete_links(
+        ...     link_ids=link_ids
+        ... )
+        >>> print(success)  # Output: True
+        >>>
+        >>> # Verify links were deleted
+        >>> for link_id in link_ids:
+        ...     response, link = client.get_link_info_by_link_id(
+        ...         link_id=link_id,
+        ...         raise_for_status=False
+        ...     )
+        ...     print(f"Link {link_id} exists: {link is not None}")
+        ... # Output:
+        ... # Link lnk_abc123def456 exists: False
+        ... # Link lnk_ghi789jkl012 exists: False
+
         Ref:
 
         - https://developers.short.io/reference/delete_links-delete-bulk

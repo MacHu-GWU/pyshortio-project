@@ -50,7 +50,36 @@ Welcome to ``pyshortio`` Documentation
 .. image:: https://pyshortio.readthedocs.io/en/latest/_static/pyshortio-logo.png
     :target: https://pyshortio.readthedocs.io/en/latest/
 
-Documentation for ``pyshortio``.
+PyShortIO provides a clean, well-documented API client for the `Short.io <https://short.io/>`_ URL shortening service with comprehensive error handling and pagination support. It follows Pythonic design principles to make URL shortening operations intuitive and efficient.
+
+
+Quick Start
+------------------------------------------------------------------------------
+.. code-block:: python
+
+    from pyshortio.api import Client
+
+    # Initialize client with your API token
+    client = Client(token="your_api_token")
+
+    # Get your domain
+    response, domain = client.get_domain_by_hostname("your-domain.short.gy")
+    domain_id = domain.id
+
+    # Create a shortened link
+    response, link = client.create_link(
+        hostname="your-domain.short.gy",
+        original_url="https://example.com/very-long-url-path",
+        title="Example Link"
+    )
+    print(f"Shortened URL: {link.short_url}")
+
+    # List all your links
+    response, links = client.list_links(domain_id=domain_id)
+    for link in links:
+        print(f"{link.title}: {link.short_url} -> {link.original_url}")
+
+📖 `Complete Documentation <https://pyshortio.readthedocs.io/en/latest/>`_
 
 
 .. _install:
