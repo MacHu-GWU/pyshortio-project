@@ -6,7 +6,7 @@ omit =
     pyshortio/tests/*
     pyshortio/vendor/*
     pyshortio/_version.py
-    pyshortio/cli.py
+    pyshortio/args.py
     pyshortio/paths.py
 
 [report]

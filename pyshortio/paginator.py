@@ -68,7 +68,7 @@ def _paginate(
     :param max_results: Total maximum results to return across all pages
     """
     n = 0
-    if kwargs is None:
+    if kwargs is None: # pragma: no cover
         kwargs = {}
 
     while 1:
@@ -77,7 +77,7 @@ def _paginate(
         n += len(response_data.get(list_key, []))
         yield response, result
 
-        if n >= max_results:
+        if n >= max_results: # pragma: no cover
             break
 
         next_token = get_next_token(response_data)

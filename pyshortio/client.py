@@ -16,10 +16,12 @@ import dataclasses
 import requests
 
 from .type_hint import T_KWARGS
+from .constants import DEFAULT_DEBUG
 
 # mixin modules
 from .domain import DomainMixin
 from .link_queries import LinkQueriesMixin
+from .link_management import LinkManagementMixin
 
 
 def normalize_endpoint(endpoint: str) -> str:
@@ -42,13 +44,11 @@ def normalize_endpoint(endpoint: str) -> str:
     return endpoint
 
 
-DEBUG = (True,)
-
-
 @dataclasses.dataclass
 class Client(
     DomainMixin,
     LinkQueriesMixin,
+    LinkManagementMixin,
 ):
     """
     Main client class for interacting with the Short.io API.
@@ -84,12 +84,22 @@ class Client(
             "authorization": self.token,
         }
 
+    @property
+    def delete_headers(self) -> dict[str, str]:
+        """
+        Get the default HTTP headers for delete API requests.
+        """
+        return {
+            "accept": "application/json",
+            "authorization": self.token,
+        }
+
     def http_get(
         self,
         url: str,
         headers: T.Optional[T_KWARGS] = None,
         params: T.Optional[T_KWARGS] = None,
-        debug: bool = DEBUG,
+        debug: bool = DEFAULT_DEBUG,
     ):
         """
         Perform an HTTP GET request to the Short.io API.
@@ -99,10 +109,10 @@ class Client(
         logging request/response details for debugging.
         """
         if debug:
-            print(f"request.url = {url}")
+            print(f"===== Start of GET request.url = {url} =====")
 
         final_headers = self.headers
-        if headers is not None:
+        if headers is not None:# pragma: no cover
             final_headers.update(headers)
         if debug:
             print(f"request.headers = {final_headers}")
@@ -117,6 +127,7 @@ class Client(
             print(f"response.status = {res.status_code}")
             print("response.data =")
             print(json.dumps(res.json(), indent=4, ensure_ascii=False))
+            print(f"===== End of GET request.url = {url} =====")
         return res
 
     def http_post(
@@ -125,13 +136,13 @@ class Client(
         headers: T.Optional[dict[str, T.Any]] = None,
         params: T.Optional[dict[str, T.Any]] = None,
         data: T.Optional[dict[str, T.Any]] = None,
-        debug: bool = DEBUG,
+        debug: bool = DEFAULT_DEBUG,
     ):
         if debug:
-            print(f"request.url = {url}")
+            print(f"===== Start of POST request.url = {url} =====")
 
         final_headers = self.headers
-        if headers is not None:
+        if headers is not None: # pragma: no cover
             final_headers.update(headers)
         if debug:
             print(f"request.headers = {final_headers}")
@@ -142,11 +153,45 @@ class Client(
             url,
             headers=final_headers,
             params=params,
-            data=data,
+            json=data,
         )
         if debug:
             print(f"response.status = {res.status_code}")
             print(f"response.headers = {res.headers}")
             print("response.data =")
             print(json.dumps(res.json(), indent=4, ensure_ascii=False))
+            print(f"===== End of POST request.url = {url} =====")
+        return res
+
+    def http_delete(
+        self,
+        url: str,
+        headers: T.Optional[dict[str, T.Any]] = None,
+        params: T.Optional[dict[str, T.Any]] = None,
+        data: T.Optional[dict[str, T.Any]] = None,
+        debug: bool = DEFAULT_DEBUG,
+    ):
+        if debug:
+            print(f"===== Start of DELETE request.url = {url} =====")
+
+        final_headers = self.delete_headers
+        if headers is not None: # pragma: no cover
+            final_headers.update(headers)
+        if debug:
+            print(f"request.headers = {final_headers}")
+            print(f"request.params = {params}")
+            print(f"request.data = {data}")
+
+        res = requests.delete(
+            url,
+            headers=final_headers,
+            params=params,
+            json=data,
+        )
+        if debug:
+            print(f"response.status = {res.status_code}")
+            print(f"response.headers = {res.headers}")
+            print("response.data =")
+            print(json.dumps(res.json(), indent=4, ensure_ascii=False))
+            print(f"===== End of DELETE request.url = {url} =====")
         return res

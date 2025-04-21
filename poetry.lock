@@ -2424,10 +2424,10 @@ keyring = ["keyring (>=15.1)"]
 name = "typing-extensions"
 version = "4.13.0"
 description = "Backported and Experimental Type Hints for Python 3.8+"
-optional = true
+optional = false
 python-versions = ">=3.8"
 groups = ["main"]
-markers = "extra == \"doc\" or (extra == \"dev\" or extra == \"doc\") and python_version < \"3.11\""
+markers = "extra == \"doc\" or python_version < \"3.11\""
 files = [
     {file = "typing_extensions-4.13.0-py3-none-any.whl", hash = "sha256:c8dd92cc0d6425a97c18fbb9d1954e5ff92c1ca881a309c45f06ebc0b79058e5"},
     {file = "typing_extensions-4.13.0.tar.gz", hash = "sha256:0a4ac55a5820789d87e297727d229866c9650f6521b64206413c4fbada24d95b"},
@@ -2523,4 +2523,4 @@ test = ["pytest", "pytest-cov"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.9,<4.0"
-content-hash = "3307ec14210b23f3c1e9f606c4354055999188a0b7c9a817a5a38c418ea4beab"
+content-hash = "524e8ef817766174252813781deb3155b700be0bd2ad287470097d4f0448caae"

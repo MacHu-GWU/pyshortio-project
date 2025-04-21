@@ -1,0 +1,6 @@
+# -*- coding: utf-8 -*-
+
+DEFAULT_DEBUG = True
+# DEFAULT_DEBUG = False
+DEFAULT_RAISE_FOR_STATUS = True
+# DEFAULT_RAISE_FOR_STATUS = False

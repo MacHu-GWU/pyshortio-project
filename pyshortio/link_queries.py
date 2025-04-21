@@ -45,267 +45,20 @@ original method name and return an iterable of the original method's return valu
 This approach provides a balance between raw API access and Pythonic convenience,
 giving users flexibility in how they interact with the Short.io API.
 """
+
 import typing as T
-import dataclasses
 from datetime import datetime
 
 from requests import Response
 
-from .model import BaseModel
-from .arg import REQ, NA, rm_na
-from .type_hint import T_KWARGS
+from .arg import NA, rm_na
+from .constants import DEFAULT_RAISE_FOR_STATUS
+from .model import Link, Folder
 from .paginator import _paginate
+
 
 if T.TYPE_CHECKING:  # pragma: no cover
     from .client import Client
-
-
-@dataclasses.dataclass
-class Link(BaseModel):
-    """
-    Link model representing a Short.io shortened link.
-
-    This class provides a Pythonic interface to Short.io link data while maintaining
-    access to the raw API response. All link properties are accessed through
-    getter methods that retrieve values from the underlying `_data` dictionary,
-    providing resilience against API schema changes.
-
-    .. note::
-
-        All properties return None if the corresponding data is not present
-        in the raw API response, providing safe access to optional fields.
-
-    Ref:
-
-    - https://developers.short.io/reference/get_api-links
-    """
-
-    _data: dict[str, T.Any] = dataclasses.field(default=REQ)
-
-    @property
-    def original_url(self) -> T.Optional[str]:
-        return self._data.get("originalURL")
-
-    @property
-    def cloaking(self) -> T.Optional[bool]:
-        return self._data.get("cloaking")
-
-    @property
-    def password(self) -> T.Optional[str]:
-        return self._data.get("password")
-
-    @property
-    def expires_at(self) -> T.Optional[int]:
-        return self._data.get("expiresAt")
-
-    @property
-    def expired_url(self) -> T.Optional[str]:
-        return self._data.get("expiredURL")
-
-    @property
-    def title(self) -> T.Optional[str]:
-        return self._data.get("title")
-
-    @property
-    def tags(self) -> T.Optional[list[str]]:
-        return self._data.get("tags")
-
-    @property
-    def utm_source(self) -> T.Optional[str]:
-        return self._data.get("utmSource")
-
-    @property
-    def utm_medium(self) -> T.Optional[str]:
-        return self._data.get("utmMedium")
-
-    @property
-    def utm_campaign(self) -> T.Optional[str]:
-        return self._data.get("utmCampaign")
-
-    @property
-    def utm_term(self) -> T.Optional[str]:
-        return self._data.get("utmTerm")
-
-    @property
-    def utm_content(self) -> T.Optional[str]:
-        return self._data.get("utmContent")
-
-    @property
-    def ttl(self) -> T.Optional[str]:
-        return self._data.get("ttl")
-
-    @property
-    def path(self) -> T.Optional[str]:
-        return self._data.get("path")
-
-    @property
-    def android_url(self) -> T.Optional[str]:
-        return self._data.get("androidURL")
-
-    @property
-    def iphone_url(self) -> T.Optional[str]:
-        return self._data.get("iphoneURL")
-
-    @property
-    def created_at(self) -> T.Optional[datetime]:
-        created_at_val = self._data.get("createdAt")
-        if created_at_val:
-            try:
-                # Check if it's a string format that needs conversion
-                if isinstance(created_at_val, str):
-                    return datetime.fromisoformat(created_at_val.replace("Z", "+00:00"))
-                # If it's a timestamp
-                elif isinstance(created_at_val, (int, float)):
-                    return datetime.fromtimestamp(created_at_val)
-            except (ValueError, TypeError):  # pragma: no cover
-                pass
-        return None
-
-    @property
-    def clicks_limit(self) -> T.Optional[int]:
-        return self._data.get("clicksLimit")
-
-    @property
-    def password_contact(self) -> T.Optional[bool]:
-        return self._data.get("passwordContact")
-
-    @property
-    def skip_qs(self) -> T.Optional[bool]:
-        return self._data.get("skipQS")
-
-    @property
-    def archived(self) -> T.Optional[bool]:
-        return self._data.get("archived")
-
-    @property
-    def split_url(self) -> T.Optional[str]:
-        return self._data.get("splitURL")
-
-    @property
-    def split_percent(self) -> T.Optional[int]:
-        return self._data.get("splitPercent")
-
-    @property
-    def integration_adroll(self) -> T.Optional[str]:
-        return self._data.get("integrationAdroll")
-
-    @property
-    def integration_fb(self) -> T.Optional[str]:
-        return self._data.get("integrationFB")
-
-    @property
-    def integration_ga(self) -> T.Optional[str]:
-        return self._data.get("integrationGA")
-
-    @property
-    def integration_gtm(self) -> T.Optional[str]:
-        return self._data.get("integrationGTM")
-
-    @property
-    def id_string(self) -> T.Optional[str]:
-        return self._data.get("idString")
-
-    @property
-    def id(self) -> T.Optional[str]:
-        return self._data.get("id")
-
-    @property
-    def short_url(self) -> T.Optional[str]:
-        return self._data.get("shortURL")
-
-    @property
-    def secure_short_url(self) -> T.Optional[str]:
-        return self._data.get("secureShortURL")
-
-    @property
-    def redirect_type(self) -> T.Optional[str]:
-        return self._data.get("redirectType")
-
-    @property
-    def folder_id(self) -> T.Optional[str]:
-        return self._data.get("FolderId")
-
-    @property
-    def domain_id(self) -> T.Optional[int]:
-        return self._data.get("DomainId")
-
-    @property
-    def owner_id(self) -> T.Optional[int]:
-        return self._data.get("OwnerId")
-
-    @property
-    def has_password(self) -> T.Optional[bool]:
-        return self._data.get("hasPassword")
-
-    @property
-    def user(self) -> T.Optional[dict]:
-        return self._data.get("User")
-
-    @property
-    def user_id(self) -> T.Optional[int]:
-        user = self.user
-        if user:
-            return user.get("id")
-        return None
-
-    @property
-    def user_name(self) -> T.Optional[str]:
-        user = self.user
-        if user:
-            return user.get("name")
-        return None
-
-    @property
-    def user_email(self) -> T.Optional[str]:
-        user = self.user
-        if user:
-            return user.get("email")
-        return None
-
-    @property
-    def user_photo_url(self) -> T.Optional[str]:
-        user = self.user
-        if user:
-            return user.get("photoURL")
-        return None
-
-    @property
-    def core_data(self) -> T_KWARGS:
-        """
-        Get the essential link data in a simplified dictionary.
-        """
-        return {
-            "id": self.id,
-            "id_string": self.id_string,
-            "original_url": self.original_url,
-            "short_url": self.short_url,
-            "created_at": self.created_at,
-        }
-
-
-@dataclasses.dataclass
-class Folder(BaseModel):
-    _data: dict[str, T.Any] = dataclasses.field(default=REQ)
-
-    @property
-    def domain_id(self) -> T.Optional[int]:
-        return self._data.get("DomainId")
-
-    @property
-    def id(self) -> str:
-        return self._data.get("id")
-
-    @property
-    def name(self) -> str:
-        return self._data.get("name")
-
-    @property
-    def core_data(self) -> T_KWARGS:
-        return {
-            "domain_id": self.domain_id,
-            "id": self.id,
-            "name": self.name,
-        }
 
 
 class LinkQueriesMixin:
@@ -334,7 +87,7 @@ class LinkQueriesMixin:
         date_sort_order: T.Optional[str] = NA,
         page_token: T.Optional[str] = NA,
         folder_id: T.Optional[str] = NA,
-        raise_for_status: bool = True,
+        raise_for_status: bool = DEFAULT_RAISE_FOR_STATUS,
     ) -> tuple[Response, list[Link]]:
         """
         List links for a specific domain with optional filtering.
@@ -366,7 +119,10 @@ class LinkQueriesMixin:
         )
         if raise_for_status:
             response.raise_for_status()
-        link_list = [Link(_data=dct) for dct in response.json().get("links", [])]
+        if response.status_code == 200:
+            link_list = [Link(_data=dct) for dct in response.json().get("links", [])]
+        else:
+            raise NotImplementedError("Unexpected response code")
         return response, link_list
 
     def pagi_list_links(
@@ -380,7 +136,7 @@ class LinkQueriesMixin:
         date_sort_order: T.Optional[str] = NA,
         folder_id: T.Optional[str] = NA,
         total_max_results: int = 9999,
-        raise_for_status: bool = True,
+        raise_for_status: bool = DEFAULT_RAISE_FOR_STATUS,
     ) -> T.Iterable[tuple[Response, list[Link]]]:
         """
         Auto-paginated version of list_link method.
@@ -428,8 +184,8 @@ class LinkQueriesMixin:
         self: "Client",
         domain_id: int,
         link_id: str,
-        raise_for_status: bool = True,
-    ):
+        raise_for_status: bool = DEFAULT_RAISE_FOR_STATUS,
+    ) -> tuple[Response, T.Optional[list]]:
         """
         Get OpenGraph properties for a specific link.
 
@@ -441,12 +197,16 @@ class LinkQueriesMixin:
         response = self.http_get(url=url)
         if raise_for_status:
             response.raise_for_status()
-        return response, None
+        if response.status_code == 200:
+            result = response.json()
+        else:  # pragma: no cover
+            raise NotImplementedError("Unexpected response code")
+        return response, result
 
     def get_link_info_by_link_id(
         self: "Client",
         link_id: str,
-        raise_for_status: bool = True,
+        raise_for_status: bool = DEFAULT_RAISE_FOR_STATUS,
     ) -> tuple[Response, Link]:
         """
         Get link information by link ID.
@@ -459,17 +219,19 @@ class LinkQueriesMixin:
         response = self.http_get(url=url)
         if raise_for_status:
             response.raise_for_status()
-        if response.status_code == 404:
-            link = None
-        else:
+        if response.status_code == 200:
             link = Link(_data=response.json())
+        elif response.status_code == 404:
+            link = None
+        else:  # pragma: no cover
+            raise NotImplementedError("Unexpected response code")
         return response, link
 
     def get_link_info_by_path(
         self: "Client",
         hostname: str,
         path: str,
-        raise_for_status: bool = True,
+        raise_for_status: bool = DEFAULT_RAISE_FOR_STATUS,
     ) -> tuple[Response, Link]:
         """
         Get link information by link ID.
@@ -486,17 +248,19 @@ class LinkQueriesMixin:
         response = self.http_get(url=url, params=params)
         if raise_for_status:
             response.raise_for_status()
-        if response.status_code == 404:
-            link = None
-        else:
+        if response.status_code == 200:
             link = Link(_data=response.json())
+        elif response.status_code == 404:
+            link = None
+        else:  # pragma: no cover
+            raise NotImplementedError("Unexpected response code")
         return response, link
 
     def list_links_by_original_url(
         self: "Client",
         hostname: str,
         original_url: str,
-        raise_for_status: bool = True,
+        raise_for_status: bool = DEFAULT_RAISE_FOR_STATUS,
     ) -> tuple[Response, list[Link]]:
         """
         Returns all links with the same original URL.
@@ -513,13 +277,18 @@ class LinkQueriesMixin:
         response = self.http_get(url=url, params=params)
         if raise_for_status:
             response.raise_for_status()
-        link_list = [Link(_data=dct) for dct in response.json().get("links", [])]
+        if response.status_code == 200:
+            link_list = [Link(_data=dct) for dct in response.json().get("links", [])]
+        elif response.status_code == 404:
+            link_list = []
+        else:  # pragma: no cover
+            raise NotImplementedError("Unexpected response code")
         return response, link_list
 
     def list_folders(
         self: "Client",
         domain_id: int,
-        raise_for_status: bool = True,
+        raise_for_status: bool = DEFAULT_RAISE_FOR_STATUS,
     ) -> tuple[Response, list[Folder]]:
         """
         Ref:
@@ -530,16 +299,19 @@ class LinkQueriesMixin:
         response = self.http_get(url=url)
         if raise_for_status:
             response.raise_for_status()
-        folder_list = [
-            Folder(_data=dct) for dct in response.json().get("linkFolders", [])
-        ]
+        if response.status_code == 200:
+            folder_list = [
+                Folder(_data=dct) for dct in response.json().get("linkFolders", [])
+            ]
+        else:
+            raise NotImplementedError("Unexpected response code")
         return response, folder_list
 
     def get_folder(
         self: "Client",
         domain_id: int,
         folder_id: str,
-        raise_for_status: bool = True,
+        raise_for_status: bool = DEFAULT_RAISE_FOR_STATUS,
     ) -> tuple[Response, T.Optional[Folder]]:
         """
         Ref:
@@ -548,10 +320,16 @@ class LinkQueriesMixin:
         """
         url = f"{self.endpoint}/links/folders/{domain_id}/{folder_id}"
         response = self.http_get(url=url)
-        if raise_for_status:
+        if raise_for_status:  # pragma: no cover
             response.raise_for_status()
-        if response.status_code == 404:
+        if response.status_code == 200:
+            response_json = response.json()
+            if response_json is None:
+                folder = None
+            else:
+                folder = Folder(_data=response.json())
+        elif response.status_code == 404:  # pragma: no cover
             folder = None
-        else:
-            folder = Folder(_data=response.json())
+        else:  # pragma: no cover
+            raise NotImplementedError("Unexpected response code")
         return response, folder
