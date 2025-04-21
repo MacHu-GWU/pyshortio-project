@@ -1,0 +1,49 @@
++----- 🕑 🔄 Start 'Sync links from TSV file to short.io' -----------------------+
+🔄
+🔄 hostname = 'pyshortio.short.gy'
+🔄 update_if_not_the_same = True
+🔄 delete_if_not_in_file = True
+🔄 +----- 🕑 📄 Start 'Read link data from TSV file' -----------------------------+
+🔄 📄
+🔄 📄 Read data ...
+🔄 📄 Check original_url column ...
+🔄 📄 Process tags column ...
+🔄 📄 Got 8 rows
+🔄 📄 Got 2 unique folder names
+🔄 📄
+🔄 +----- ⏰ ✅ 📄 End 'Read link data from TSV file', elapsed = 0.01 sec ---------+
+🔄 +----- 🕑 📂 Start 'Create folder if they do not exists' ----------------------+
+🔄 📂
+🔄 📂 Read existing folder info from short.io ...
+🔄 📂 Got 2 existing folders
+🔄 📂 'Python' folder already exists
+🔄 📂 'Short IO' folder already exists
+🔄 📂
+🔄 +----- ⏰ ✅ 📂 End 'Create folder if they do not exists', elapsed = 0.15 sec -----+
+🔄 +----- 🕑 🔍 Start 'Identify link to create, update and delete' ---------------+
+🔄 🔍
+🔄 🔍 Read existing link info from short.io ...
+🔄 🔍 Got 5 existing links
+🔄 🔍 🟢 got 3 links to create
+🔄 🔍 🟡 got 1 links to update
+🔄 🔍 🔴 got 0 links to delete
+🔄 🔍 To create: link_data = {'original_url': 'https://short.io/pricing/?utm_medium=linkedin', 'title': 'Short io pricing', 'tags': ['pricing', 'short.io'], 'utm_medium': 'linkedin', 'folder_id': 'BgG2lQ2kQwLHa4TepHU8P'}
+🔄 🔍 To create: link_data = {'original_url': 'https://short.io/pricing/?utm_medium=twitter', 'title': 'Short io pricing', 'tags': ['pricing', 'short.io'], 'utm_medium': 'twitter', 'folder_id': 'BgG2lQ2kQwLHa4TepHU8P'}
+🔄 🔍 To create: link_data = {'original_url': 'https://short.io/pricing/?utm_medium=reddit', 'title': 'Short io pricing', 'tags': ['pricing', 'short.io'], 'utm_medium': 'reddit', 'folder_id': 'BgG2lQ2kQwLHa4TepHU8P'}
+🔄 🔍 To update: link_id = 'lnk_5Dae_DoultcXz5jO9HSCn26amm', link_data = {'original_url': 'https://www.python.org/', 'title': 'Python Org', 'path': 'python-org', 'tags': ['python'], 'folder_id': 'JR_S7CWHpfBqNZCYa2EzO'}
+🔄 🔍
+🔄 +----- ⏰ ✅ 🔍 End 'Identify link to create, update and delete', elapsed = 0.18 sec -----+
+🔄 +----- 🕑 🟢 Start 'Create links' ---------------------------------------------+
+🔄 🟢
+🔄 🟢 create link for original_url = https://short.io/pricing/?utm_medium=linkedin
+🔄 🟢 create link for original_url = https://short.io/pricing/?utm_medium=twitter
+🔄 🟢 create link for original_url = https://short.io/pricing/?utm_medium=reddit
+🔄 🟢
+🔄 +----- ⏰ ✅ 🟢 End 'Create links', elapsed = 0.26 sec -------------------------+
+🔄 +----- 🕑 🟡 Start 'Update links' ---------------------------------------------+
+🔄 🟡
+🔄 🟡 update link lnk_5Dae_DoultcXz5jO9HSCn26amm, original_url = https://www.python.org/
+🔄 🟡
+🔄 +----- ⏰ ✅ 🟡 End 'Update links', elapsed = 0.21 sec -------------------------+
+🔄
++----- ⏰ ✅ 🔄 End 'Sync links from TSV file to short.io', elapsed = 0.97 sec -----+

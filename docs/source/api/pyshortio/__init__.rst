@@ -18,8 +18,10 @@ sub packages and modules
     exc <exc>
     link_management <link_management>
     link_queries <link_queries>
+    logger <logger>
     model <model>
     paginator <paginator>
+    sync_tsv <sync_tsv>
     type_hint <type_hint>
     utils <utils>
     

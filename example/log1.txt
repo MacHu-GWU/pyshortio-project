@@ -1,0 +1,47 @@
++----- 🕑 🔄 Start 'Sync links from TSV file to short.io' -----------------------+
+🔄
+🔄 hostname = 'pyshortio.short.gy'
+🔄 update_if_not_the_same = True
+🔄 delete_if_not_in_file = True
+🔄 +----- 🕑 📄 Start 'Read link data from TSV file' -----------------------------+
+🔄 📄
+🔄 📄 Read data ...
+🔄 📄 Check original_url column ...
+🔄 📄 Process tags column ...
+🔄 📄 Got 5 rows
+🔄 📄 Got 2 unique folder names
+🔄 📄
+🔄 +----- ⏰ ✅ 📄 End 'Read link data from TSV file', elapsed = 0.04 sec ---------+
+🔄 +----- 🕑 📂 Start 'Create folder if they do not exists' ----------------------+
+🔄 📂
+🔄 📂 Read existing folder info from short.io ...
+🔄 📂 Got 2 existing folders
+🔄 📂 'Python' folder already exists
+🔄 📂 'Short IO' folder already exists
+🔄 📂
+🔄 +----- ⏰ ✅ 📂 End 'Create folder if they do not exists', elapsed = 0.17 sec -----+
+🔄 +----- 🕑 🔍 Start 'Identify link to create, update and delete' ---------------+
+🔄 🔍
+🔄 🔍 Read existing link info from short.io ...
+🔄 🔍 Got 0 existing links
+🔄 🔍 🟢 got 5 links to create
+🔄 🔍 🟡 got 0 links to update
+🔄 🔍 🔴 got 0 links to delete
+🔄 🔍 To create: link_data = {'original_url': 'https://short.io/pricing/', 'title': 'Short io pricing', 'tags': ['pricing', 'short.io'], 'folder_id': 'BgG2lQ2kQwLHa4TepHU8P'}
+🔄 🔍 To create: link_data = {'original_url': 'https://short.io/features/', 'title': 'Short io features', 'tags': ['features', 'short.io'], 'folder_id': 'BgG2lQ2kQwLHa4TepHU8P'}
+🔄 🔍 To create: link_data = {'original_url': 'https://short.io/integrations/', 'title': 'Short io integrations', 'tags': ['integrations', 'short.io'], 'folder_id': 'BgG2lQ2kQwLHa4TepHU8P'}
+🔄 🔍 To create: link_data = {'original_url': 'https://www.python.org/', 'title': 'Python Org', 'tags': ['python'], 'folder_id': 'JR_S7CWHpfBqNZCYa2EzO'}
+🔄 🔍 To create: link_data = {'original_url': 'https://example.com/'}
+🔄 🔍
+🔄 +----- ⏰ ✅ 🔍 End 'Identify link to create, update and delete', elapsed = 0.16 sec -----+
+🔄 +----- 🕑 🟢 Start 'Create links' ---------------------------------------------+
+🔄 🟢
+🔄 🟢 create link for original_url = https://short.io/pricing/
+🔄 🟢 create link for original_url = https://short.io/features/
+🔄 🟢 create link for original_url = https://short.io/integrations/
+🔄 🟢 create link for original_url = https://www.python.org/
+🔄 🟢 create link for original_url = https://example.com/
+🔄 🟢
+🔄 +----- ⏰ ✅ 🟢 End 'Create links', elapsed = 0.66 sec -------------------------+
+🔄
++----- ⏰ ✅ 🔄 End 'Sync links from TSV file to short.io', elapsed = 1.20 sec -----+

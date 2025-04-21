@@ -52,6 +52,8 @@ Welcome to ``pyshortio`` Documentation
 
 PyShortIO provides a clean, well-documented API client for the `Short.io <https://short.io/>`_ URL shortening service with comprehensive error handling and pagination support. It follows Pythonic design principles to make URL shortening operations intuitive and efficient.
 
+📖 `Complete Documentation <https://pyshortio.readthedocs.io/en/latest/>`_
+
 
 Quick Start
 ------------------------------------------------------------------------------
@@ -79,7 +81,17 @@ Quick Start
     for link in links:
         print(f"{link.title}: {link.short_url} -> {link.original_url}")
 
-📖 `Complete Documentation <https://pyshortio.readthedocs.io/en/latest/>`_
+
+🚀 Bulk URL Management with Sync TSV
+------------------------------------------------------------------------------
+Managing multiple Short.io links doesn't have to be tedious! PyShortIO includes a powerful Sync TSV feature that lets you create, update, and delete hundreds of shortened URLs in a single operation using spreadsheet files. Maintain your links in Google Sheets, export as TSV, and sync them to Short.io with just a few lines of code. Perfect for marketing campaigns, documentation management, or any scenario requiring bulk URL operations.
+
+.. code-block:: python
+
+    # Install with sync dependencies
+    # pip install pyshortio[sync]
+    with open("links.tsv", "r") as file:
+        client.sync_tsv(hostname="yourdomain.short.gy", file=file)
 
 
 .. _install:
