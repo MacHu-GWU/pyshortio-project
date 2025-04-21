@@ -22,6 +22,7 @@ from .constants import DEFAULT_DEBUG
 from .domain import DomainMixin
 from .link_queries import LinkQueriesMixin
 from .link_management import LinkManagementMixin
+from .sync_tsv import SyncTSVMixin
 
 
 def normalize_endpoint(endpoint: str) -> str:
@@ -49,6 +50,7 @@ class Client(
     DomainMixin,
     LinkQueriesMixin,
     LinkManagementMixin,
+    SyncTSVMixin,
 ):
     """
     Main client class for interacting with the Short.io API.

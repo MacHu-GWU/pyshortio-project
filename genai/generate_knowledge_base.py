@@ -28,6 +28,9 @@ gh_pipeline = GitHubPipeline(
     include=[
         f"{PACKAGE_NAME}/**/*.py",
         "tests/**/*.py",
+        "example/**/*.py",
+        "example/**/*.tsv",
+        "example/**/*.txt",
         "docs/source/**/index.rst",
         "docs/source/**/index.md",
         "docs/source/**/*.py",

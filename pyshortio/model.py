@@ -31,8 +31,10 @@ by the Short.io API.
 """
 
 import typing as T
+import json
 import dataclasses
 from datetime import datetime
+from functools import cached_property
 
 from .exc import ParamError
 from .arg import REQ, _REQUIRED, rm_na, T_KWARGS

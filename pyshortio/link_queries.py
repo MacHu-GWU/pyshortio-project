@@ -436,3 +436,99 @@ class LinkQueriesMixin:
         else:  # pragma: no cover
             raise NotImplementedError("Unexpected response code")
         return response, folder
+
+    def list_folders(
+        self: "Client",
+        domain_id: int,
+        raise_for_status: bool = DEFAULT_RAISE_FOR_STATUS,
+    ) -> tuple[Response, list[Folder]]:
+        """
+        This method retrieves all folders used to organize links for a domain.
+
+        Example:
+
+        >>> # List all folders for a domain
+        >>> response, folder_list = client.list_folders(
+        ...     domain_id=45678
+        ... )
+        >>> # Print folder information
+        >>> for folder in folder_list:
+        ...     print(f"ID: {folder.id}, Name: {folder.name}")
+
+        Ref:
+
+        - https://developers.short.io/reference/get_links-folders-domainid
+        """
+        url = f"{self.endpoint}/links/folders/{domain_id}"
+        response = self.http_get(url=url)
+        if raise_for_status:
+            response.raise_for_status()
+        if response.status_code == 200:
+            folder_list = [
+                Folder(_data=dct) for dct in response.json().get("linkFolders", [])
+            ]
+        else:
+            raise NotImplementedError("Unexpected response code")
+        return response, folder_list
+
+    def create_folder(
+        self: "Client",
+        domain_id: int,
+        name: str,
+        color: str = NA,
+        background_color: str = NA,
+        logo_url: str = NA,
+        logo_height: str = NA,
+        logo_width: str = NA,
+        ec_level: str = NA,
+        integration_fb: str = NA,
+        integration_ga: str = NA,
+        integration_gtm: str = NA,
+        integration_adroll: str = NA,
+        utm_campaign: str = NA,
+        utm_medium: str = NA,
+        utm_source: str = NA,
+        redirect_type: int = NA,
+        expires_at_days: int = NA,
+        icon: str = NA,
+        prefix: str = NA,
+        raise_for_status: bool = DEFAULT_RAISE_FOR_STATUS,
+    ) -> tuple[Response, T.Optional[Folder]]:
+        """
+        Create a new folder for organizing links.
+
+        Ref:
+
+        - https://developers.short.io/reference/post_links-folders
+        """
+        url = f"{self.endpoint}/links/folders"
+        data = {
+            "domainId": domain_id,
+            "name": name,
+            "color": color,
+            "backgroundColor": background_color,
+            "logoUrl": logo_url,
+            "logoHeight": logo_height,
+            "logoWidth": logo_width,
+            "ecLevel": ec_level,
+            "integrationFB": integration_fb,
+            "integrationGA": integration_ga,
+            "integrationGTM": integration_gtm,
+            "integrationAdroll": integration_adroll,
+            "utmCampaign": utm_campaign,
+            "utmMedium": utm_medium,
+            "utmSource": utm_source,
+            "redirectType": redirect_type,
+            "expiresAtDays": expires_at_days,
+            "icon": icon,
+            "prefix": prefix,
+        }
+        data = rm_na(**data)
+        response = self.http_post(url=url, data=data)
+        if raise_for_status:  # pragma: no cover
+            response.raise_for_status()
+        if response.status_code in [200, 201]:
+            folder = Folder(_data=response.json())
+        else:  # pragma: no cover
+            raise NotImplementedError("Unexpected response code")
+        return response, folder
