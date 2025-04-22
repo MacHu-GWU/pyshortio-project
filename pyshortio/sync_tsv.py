@@ -16,7 +16,6 @@ except ImportError:  # pragma: no cover
     import typing as T
 
 import io
-import json
 from datetime import datetime
 
 try:
@@ -431,7 +430,7 @@ class SyncTSVMixin:
     def sync_tsv(
         self: "Client",
         hostname: str,
-        file: io.StringIO,
+        file: T.TextIO,
         update_if_not_the_same: bool = True,
         delete_if_not_in_file: bool = False,
         raise_for_status: bool = DEFAULT_RAISE_FOR_STATUS,

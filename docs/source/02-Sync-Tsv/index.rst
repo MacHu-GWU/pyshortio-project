@@ -1,3 +1,5 @@
+.. _sync-tsv:
+
 🌟Sync TSV: The Power Tool for URL Management at Scale 🚀
 ==============================================================================
 

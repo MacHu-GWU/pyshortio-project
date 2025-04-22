@@ -15,6 +15,15 @@ x.y.z (Backlog)
 **Miscellaneous**
 
 
+0.3.1 (2025-04-21)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+**Features and Improvements**
+
+- Added new ``pyshortio.api.Client.export_to_tsv`` method to export all links from a Short.io domain to TSV format
+    - Seamlessly integrates with spreadsheet applications like Google Sheets and Microsoft Excel
+    - Perfect complement to the existing TSV sync functionality
+
+
 0.2.1 (2025-04-21)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 **Features and Improvements**

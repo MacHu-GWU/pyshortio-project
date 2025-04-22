@@ -16,6 +16,7 @@ sub packages and modules
     constants <constants>
     domain <domain>
     exc <exc>
+    export <export>
     link_management <link_management>
     link_queries <link_queries>
     logger <logger>
