@@ -2004,7 +2004,7 @@ description = "Blazingly fast DataFrame library"
 optional = true
 python-versions = ">=3.9"
 groups = ["main"]
-markers = "extra == \"sync\""
+markers = "extra == \"sync\" or extra == \"export\""
 files = [
     {file = "polars-1.27.1-cp39-abi3-macosx_10_12_x86_64.whl", hash = "sha256:ba7ad4f8046d00dd97c1369e46a4b7e00ffcff5d38c0f847ee4b9b1bb182fb18"},
     {file = "polars-1.27.1-cp39-abi3-macosx_11_0_arm64.whl", hash = "sha256:339e3948748ad6fa7a42e613c3fb165b497ed797e93fce1aa2cddf00fbc16cac"},
@@ -3438,10 +3438,11 @@ type = ["pytest-mypy"]
 auto = []
 dev = ["build", "rich", "twine", "wheel"]
 doc = ["Sphinx", "docfly", "furo", "ipython", "jupyterlab", "nbsphinx", "pygments", "rstobj", "sphinx-copybutton", "sphinx-design", "sphinx-jinja"]
+export = ["polars"]
 sync = ["polars"]
 test = ["pytest", "pytest-cov"]
 
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.9,<4.0"
-content-hash = "f7d3ed8b9c1a17769675f1e16b234fd3f941cd31d10df6235bf20d7986203ac8"
+content-hash = "63e27920438aae0215c586b91893489d279d0a152483cee108834577c85ebfad"

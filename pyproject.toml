@@ -70,6 +70,9 @@ dependencies = [
 sync = [
     "polars>=1.0.0", # for TSV processing in sync_tsv feature
 ]
+export = [
+    "polars>=1.0.0", # for export to TSV feature
+]
 
 # ------------------------------------------------------------------------------
 # Local Development dependenceies
